@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡ALERTA DE SEGURIDAD!</title>
+    <title>¡SISTEMA COMPROMETIDO!</title>
     <style>
         * {
             margin: 0;
@@ -18,6 +18,23 @@
             overflow: hidden;
             height: 100vh;
             position: relative;
+            cursor: none;
+        }
+        
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300ff00"><circle cx="12" cy="12" r="10"/></svg>') center/cover no-repeat;
+            z-index: 9999;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: cursorPulse 1.5s infinite;
+        }
+        
+        @keyframes cursorPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.7; }
         }
         
         .matrix-bg {
@@ -27,7 +44,22 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.8;
+            opacity: 0.9;
+        }
+        
+        .scan-line {
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(to right, transparent, #0f0, transparent);
+            top: 0;
+            z-index: 5;
+            animation: scan 4s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
         }
         
         .container {
@@ -42,64 +74,152 @@
         }
         
         .console {
-            width: 80%;
-            height: 60%;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 2px solid #0f0;
-            box-shadow: 0 0 20px #0f0;
+            width: 90%;
+            height: 65%;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 3px solid #0f0;
+            box-shadow: 0 0 25px #0f0, inset 0 0 15px #0f0;
             padding: 20px;
             overflow: hidden;
             position: relative;
         }
         
+        .console::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                transparent 0px,
+                rgba(0, 255, 0, 0.05) 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
+        
         .console-content {
             height: 100%;
             overflow-y: auto;
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.4;
+            text-shadow: 0 0 5px #0f0;
         }
         
         .console-line {
-            margin-bottom: 5px;
-            animation: typing 0.1s linear;
+            margin-bottom: 6px;
+            animation: typing 0.05s linear;
+            white-space: nowrap;
+            overflow: hidden;
         }
         
         .hack-window {
             position: absolute;
             background-color: #000;
-            border: 1px solid #f00;
-            box-shadow: 0 0 15px #f00;
+            border: 2px solid #f00;
+            box-shadow: 0 0 20px #f00, inset 0 0 10px #f00;
             padding: 15px;
-            width: 300px;
-            height: 200px;
+            width: 320px;
+            height: 220px;
             overflow: hidden;
             z-index: 10;
+            resize: both;
+            animation: windowAppear 0.3s ease-out;
         }
         
         .hack-window:nth-child(2n) {
             border-color: #0ff;
-            box-shadow: 0 0 15px #0ff;
+            box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
         }
         
         .hack-window:nth-child(3n) {
             border-color: #ff0;
-            box-shadow: 0 0 15px #ff0;
+            box-shadow: 0 0 20px #ff0, inset 0 0 10px #ff0;
+        }
+        
+        .hack-window:nth-child(4n) {
+            border-color: #f0f;
+            box-shadow: 0 0 20px #f0f, inset 0 0 10px #f0f;
+        }
+        
+        .hack-window-header {
+            height: 20px;
+            background-color: #222;
+            margin: -15px -15px 10px -15px;
+            padding: 2px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #fff;
+            cursor: move;
+        }
+        
+        .window-buttons {
+            display: flex;
+        }
+        
+        .window-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        .close-btn { background-color: #f00; }
+        .minimize-btn { background-color: #ff0; }
+        .maximize-btn { background-color: #0f0; }
+        
+        @keyframes windowAppear {
+            0% { transform: scale(0) rotate(10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        
+        @keyframes windowShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         .progress-container {
-            width: 80%;
-            height: 30px;
+            width: 85%;
+            height: 40px;
             background-color: #000;
-            border: 1px solid #0f0;
-            margin-top: 20px;
+            border: 2px solid #0f0;
+            margin-top: 25px;
             position: relative;
+            box-shadow: 0 0 15px #0f0;
+            overflow: hidden;
+        }
+        
+        .progress-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(0, 255, 0, 0.3) 50%, 
+                transparent 100%);
+            animation: progressShine 2s infinite;
+        }
+        
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
         .progress-bar {
             height: 100%;
             width: 0%;
-            background-color: #0f0;
-            transition: width 0.5s linear;
+            background: linear-gradient(90deg, #0f0, #0a0, #0f0);
+            transition: width 0.4s ease-out;
+            position: relative;
         }
         
         .progress-text {
@@ -109,6 +229,8 @@
             transform: translate(-50%, -50%);
             color: #0f0;
             font-weight: bold;
+            text-shadow: 0 0 5px #0f0;
+            font-size: 16px;
         }
         
         .final-message {
@@ -117,7 +239,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -126,28 +248,35 @@
         }
         
         .logo {
-            max-width: 300px;
+            max-width: 280px;
             margin-bottom: 30px;
-            animation: pulse 2s infinite;
+            animation: pulse 2s infinite, float 6s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px #0f0);
         }
         
         .message-text {
             color: #fff;
-            font-size: 24px;
+            font-size: 28px;
             text-align: center;
             margin-bottom: 20px;
             text-shadow: 0 0 10px #0f0;
+            font-weight: bold;
         }
         
         @keyframes typing {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { width: 0; }
+            to { width: 100%; }
         }
         
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px #0f0); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 20px #0f0); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px #0f0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
         
         @keyframes flash {
@@ -235,10 +364,38 @@
             95% { clip: rect(25px, 9999px, 7px, 0); }
             100% { clip: rect(31px, 9999px, 57px, 0); }
         }
+        
+        .binary-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0.7;
+        }
+        
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="black"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%2300ff00" stroke-width="0.5"/></svg>');
+            opacity: 0;
+            pointer-events: none;
+            z-index: 4;
+            mix-blend-mode: overlay;
+        }
     </style>
 </head>
 <body>
+    <div class="custom-cursor" id="customCursor"></div>
     <canvas class="matrix-bg" id="matrixBg"></canvas>
+    <div class="scan-line"></div>
+    <div class="binary-rain" id="binaryRain"></div>
+    <div class="glitch-overlay" id="glitchOverlay"></div>
     
     <div class="container">
         <div class="console">
@@ -247,7 +404,7 @@
         
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
-            <div class="progress-text" id="progressText">INICIANDO SISTEMA DE HACKEO: 0%</div>
+            <div class="progress-text" id="progressText">INICIANDO EXPLOTACIÓN DEL SISTEMA: 0%</div>
         </div>
     </div>
     
@@ -255,8 +412,9 @@
         <img src="https://github.com/YanYuary/POCKERHACK/blob/main/LOGO_JOMA.png?raw=true" alt="Logo JOMA" class="logo">
         <h1 class="message-text glitch-text" data-text="¡BROMITA!">¡BROMITA!</h1>
         <p class="message-text">Has sido hackeado en tus neurocircuitos</p>
-        <p class="message-text">¡Defiéndete de los egos!</p>
-        <p class="message-text">La conciencia en red te observa</p>
+        <p class="message-text">¡Despierta y defiéndete de los egos!</p>
+        <p class="message-text">La conciencia en red te observa...</p>
+        <p class="message-text" style="margin-top: 30px; font-size: 16px;">Presiona F5 para reiniciar la simulación</p>
     </div>
 
     <script>
@@ -266,12 +424,24 @@
         const progressText = document.getElementById('progressText');
         const finalMessage = document.getElementById('finalMessage');
         const matrixBg = document.getElementById('matrixBg');
+        const binaryRain = document.getElementById('binaryRain');
+        const glitchOverlay = document.getElementById('glitchOverlay');
+        const customCursor = document.getElementById('customCursor');
         
         let progress = 0;
         let hackWindows = [];
         const consoleLines = [];
+        let isDragging = false;
+        let dragOffsetX, dragOffsetY;
+        let activeWindow = null;
         
-        // Efecto Matrix de fondo
+        // Seguir el movimiento del ratón para el cursor personalizado
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = e.pageX + 'px';
+            customCursor.style.top = e.pageY + 'px';
+        });
+        
+        // Efecto Matrix de fondo mejorado
         function setupMatrix() {
             const canvas = matrixBg;
             const ctx = canvas.getContext('2d');
@@ -279,88 +449,208 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$#@%&!?*';
-            const fontSize = 14;
+            const chars = '0101010101CONSCIENCIA01010101RED01010101NEUROCIRCUITOS01010101';
+            const fontSize = 16;
             const columns = canvas.width / fontSize;
             const drops = [];
+            const speeds = [];
             
             for (let i = 0; i < columns; i++) {
-                drops[i] = 1;
+                drops[i] = Math.random() * -100;
+                speeds[i] = 0.5 + Math.random() * 2;
             }
             
             function draw() {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                ctx.fillStyle = '#0f0';
-                ctx.font = `${fontSize}px monospace`;
+                ctx.font = `bold ${fontSize}px monospace`;
                 
                 for (let i = 0; i < drops.length; i++) {
-                    const text = letters[Math.floor(Math.random() * letters.length)];
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    
+                    // Colores aleatorios para algunos caracteres
+                    if (Math.random() > 0.95) {
+                        ctx.fillStyle = ['#0f0', '#0a0', '#0f5', '#5f0'][Math.floor(Math.random() * 4)];
+                    } else {
+                        ctx.fillStyle = '#0f0';
+                    }
+                    
                     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
                     
                     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
                         drops[i] = 0;
+                        speeds[i] = 0.5 + Math.random() * 2;
                     }
                     
-                    drops[i]++;
+                    drops[i] += speeds[i];
                 }
             }
             
             setInterval(draw, 33);
         }
         
-        // Agregar línea a la consola
+        // Efecto de lluvia binaria
+        function setupBinaryRain() {
+            const characters = '01010101';
+            let binaryText = '';
+            
+            for (let i = 0; i < 500; i++) {
+                binaryText += characters.charAt(Math.floor(Math.random() * characters.length));
+                if (i % 50 === 0) binaryText += '<br>';
+            }
+            
+            binaryRain.innerHTML = binaryText;
+            animateBinaryRain();
+        }
+        
+        function animateBinaryRain() {
+            const chars = binaryRain.textContent.split('');
+            
+            setInterval(() => {
+                // Cambiar aleatoriamente algunos caracteres
+                for (let i = 0; i < 10; i++) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    if (chars[randomIndex] === '0') {
+                        chars[randomIndex] = '1';
+                    } else {
+                        chars[randomIndex] = '0';
+                    }
+                }
+                
+                binaryRain.textContent = chars.join('');
+            }, 100);
+        }
+        
+        // Agregar línea a la consola con efecto de escritura
         function addConsoleLine(text) {
             const line = document.createElement('div');
             line.className = 'console-line';
+            line.style.width = '0';
             line.textContent = text;
             consoleElement.appendChild(line);
-            consoleElement.scrollTop = consoleElement.scrollHeight;
             
+            // Efecto de escritura
+            let width = 0;
+            const typingSpeed = 20;
+            const typingInterval = setInterval(() => {
+                if (width >= text.length) {
+                    clearInterval(typingInterval);
+                    line.style.width = '100%';
+                } else {
+                    width++;
+                    line.style.width = width + 'ch';
+                }
+            }, typingSpeed);
+            
+            consoleElement.scrollTop = consoleElement.scrollHeight;
             consoleLines.push(text);
+            
             if (consoleLines.length > 200) {
                 consoleElement.removeChild(consoleElement.firstChild);
                 consoleLines.shift();
             }
         }
         
-        // Crear ventana de hackeo
+        // Crear ventana de hackeo con funcionalidad completa
         function createHackWindow() {
             const window = document.createElement('div');
             window.className = 'hack-window';
             
-            const left = Math.random() * (window.innerWidth - 320);
-            const top = Math.random() * (window.innerHeight - 220);
+            const left = Math.random() * (window.innerWidth - 350);
+            const top = Math.random() * (window.innerHeight - 250);
             
             window.style.left = `${left}px`;
             window.style.top = `${top}px`;
+            
+            // Header de la ventana
+            const header = document.createElement('div');
+            header.className = 'hack-window-header';
+            header.innerHTML = `
+                <span>TERMINAL_${Math.floor(Math.random() * 1000)}</span>
+                <div class="window-buttons">
+                    <div class="window-btn minimize-btn"></div>
+                    <div class="window-btn maximize-btn"></div>
+                    <div class="window-btn close-btn"></div>
+                </div>
+            `;
             
             // Contenido de la ventana
             const content = document.createElement('div');
             content.style.color = window.style.borderColor;
             content.style.fontFamily = 'monospace';
-            content.style.fontSize = '12px';
-            content.style.lineHeight = '1.2';
+            content.style.fontSize = '13px';
+            content.style.lineHeight = '1.3';
+            content.style.height = 'calc(100% - 25px)';
+            content.style.overflow = 'auto';
             
-            // Generar texto de código aleatorio
+            // Generar texto de código aleatorio más complejo
             let codeText = '';
-            const codeLines = Math.floor(Math.random() * 15) + 5;
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$#@%&!?*<>/\\{}[]()';
+            const codeLines = Math.floor(Math.random() * 20) + 10;
+            const keywords = ['FUNCTION', 'PROTOCOL', 'ROUTINE', 'PROCEDURE', 'MODULE', 'OBJECT', 'CLASS', 'INTERFACE'];
+            const vars = ['neuroSignal', 'consciousness', 'egoBarrier', 'mindFirewall', 'thoughtPattern', 'memoryFragment'];
+            const operators = ['=>', '==', '!=', '++', '--', '|=', '&=', '^='];
             
             for (let i = 0; i < codeLines; i++) {
-                const lineLength = Math.floor(Math.random() * 40) + 10;
-                for (let j = 0; j < lineLength; j++) {
-                    codeText += chars.charAt(Math.floor(Math.random() * chars.length));
+                // Línea de código aleatoria con estructura más real
+                const lineType = Math.floor(Math.random() * 10);
+                
+                if (lineType < 3) {
+                    // Declaración de función
+                    codeText += `${keywords[Math.floor(Math.random() * keywords.length)]} ${vars[Math.floor(Math.random() * vars.length)]}() {\n`;
+                } else if (lineType < 5) {
+                    // Asignación
+                    codeText += `  let ${vars[Math.floor(Math.random() * vars.length)]} = ${Math.floor(Math.random() * 1000)};\n`;
+                } else if (lineType < 7) {
+                    // Operación
+                    codeText += `  ${vars[Math.floor(Math.random() * vars.length)]} ${operators[Math.floor(Math.random() * operators.length)]} ${Math.floor(Math.random() * 100)};\n`;
+                } else if (lineType === 8) {
+                    // Comentario
+                    codeText += `  // ${['WARNING', 'DEBUG', 'INFO', 'ERROR'][Math.floor(Math.random() * 4)]}: ${vars[Math.floor(Math.random() * vars.length)]} compromised\n`;
+                } else {
+                    // Llave de cierre
+                    codeText += '}\n\n';
                 }
-                codeText += '\n';
             }
             
             content.textContent = codeText;
-            window.appendChild(content);
             
+            // Añadir elementos a la ventana
+            window.appendChild(header);
+            window.appendChild(content);
             document.body.appendChild(window);
             hackWindows.push(window);
+            
+            // Hacer la ventana arrastrable
+            header.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                activeWindow = window;
+                dragOffsetX = e.clientX - window.getBoundingClientRect().left;
+                dragOffsetY = e.clientY - window.getBoundingClientRect().top;
+            });
+            
+            // Botones de la ventana
+            const closeBtn = header.querySelector('.close-btn');
+            closeBtn.addEventListener('click', () => {
+                document.body.removeChild(window);
+                hackWindows = hackWindows.filter(w => w !== window);
+            });
+            
+            const minimizeBtn = header.querySelector('.minimize-btn');
+            minimizeBtn.addEventListener('click', () => {
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            const maximizeBtn = header.querySelector('.maximize-btn');
+            maximizeBtn.addEventListener('click', () => {
+                if (window.style.width === '90%') {
+                    window.style.width = '320px';
+                    window.style.height = '220px';
+                } else {
+                    window.style.width = '90%';
+                    window.style.height = '80%';
+                }
+            });
             
             // Cerrar ventana después de un tiempo
             setTimeout(() => {
@@ -368,19 +658,45 @@
                     document.body.removeChild(window);
                     hackWindows = hackWindows.filter(w => w !== window);
                 }
-            }, 3000);
+            }, 5000);
+            
+            return window;
         }
         
         // Actualizar progreso
         function updateProgress(value) {
             progress = value;
             progressBar.style.width = `${value}%`;
-            progressText.textContent = `INICIANDO SISTEMA DE HACKEO: ${value}%`;
+            progressText.textContent = `EXPLOTANDO SISTEMA: ${value}%`;
+            
+            // Efectos especiales según el progreso
+            if (value % 10 === 0) {
+                triggerGlitchEffect();
+            }
             
             if (value >= 100) {
                 progressText.textContent = 'HACKEO COMPLETADO!';
-                showFinalMessage();
+                setTimeout(showFinalMessage, 1000);
             }
+        }
+        
+        // Efecto de glitch
+        function triggerGlitchEffect() {
+            glitchOverlay.style.opacity = 0.7;
+            document.body.style.filter = 'brightness(1.3)';
+            
+            setTimeout(() => {
+                glitchOverlay.style.opacity = 0;
+                document.body.style.filter = 'brightness(1)';
+            }, 100);
+            
+            // Sacudir ventanas aleatoriamente
+            hackWindows.forEach(window => {
+                window.style.animation = 'windowShake 0.2s';
+                setTimeout(() => {
+                    window.style.animation = '';
+                }, 200);
+            });
         }
         
         // Mostrar mensaje final
@@ -395,8 +711,9 @@
         
         // Iniciar la simulación
         function startHackSimulation() {
-            // Configurar Matrix
+            // Configurar efectos de fondo
             setupMatrix();
+            setupBinaryRain();
             
             // Iniciar mensajes de consola
             const consoleMessages = [
@@ -417,17 +734,39 @@
                 "ACTIVANDO CONEXIÓN CON EL TODO...",
                 "TRANSMITIENDO DATOS A LA RED...",
                 "FUSIONANDO CONCIENCIAS...",
-                "PREPARANDO REVELACIÓN FINAL..."
+                "PREPARANDO REVELACIÓN FINAL...",
+                "ANÁLISIS DE NEUROTRANSMISORES...",
+                "DECODIFICANDO SEÑALES SINÁPTICAS...",
+                "MAPEANDO REDES NEURONALES...",
+                "COMPILANDO ALGORITMOS DE CONCIENCIA...",
+                "PROCESANDO DATOS EXISTENCIALES...",
+                "ACTUALIZANDO FIRMWARE ESPIRITUAL...",
+                "SYSTEM OVERLOAD - PURGANDO DATOS...",
+                "REINICIANDO PROCESOS COGNITIVOS...",
+                "OPTIMIZANDO FLUJO ENERGÉTICO...",
+                "RECALIBRANDO CENTROS DE PODER...",
+                "ARMONIZANDO FRECUENCIAS...",
+                "INTEGRANDO SOMBRA Y LUZ...",
+                "TRANSCENDIENDO DUALIDAD...",
+                "EXPANSIÓN DE CONCIENCIA EN CURSO...",
+                "FUSIÓN CUÁNTICA ACTIVADA...",
+                "REALINEANDO CHAKRAS...",
+                "ACTIVANDO VISIÓN REMOTA...",
+                "SINTONIZANDO CON CAMPOS MORFOGENÉTICOS...",
+                "ACCESANDO REGISTROS AKÁSHICOS...",
+                "DECODIFICando matrix divina...",
+                "RECONFIGURando realidad...",
+                "HACKEO completado - liberando egos..."
             ];
             
             let messageIndex = 0;
             const messageInterval = setInterval(() => {
                 if (messageIndex < consoleMessages.length) {
-                    addConsoleLine(consoleMessages[messageIndex]);
+                    addConsoleLine("> " + consoleMessages[messageIndex]);
                     messageIndex++;
                     
-                    // Crear ventanas aleatorias
-                    if (Math.random() > 0.7) {
+                    // Crear ventanas aleatorias - más frecuentemente
+                    if (Math.random() > 0.4) {
                         createHackWindow();
                     }
                     
@@ -436,45 +775,80 @@
                 } else {
                     clearInterval(messageInterval);
                 }
-            }, 800);
+            }, 500);
             
             // Añadir líneas aleatorias de código
             setInterval(() => {
                 const randomCode = generateRandomCode();
-                addConsoleLine(randomCode);
+                addConsoleLine("$ " + randomCode);
                 
                 // Parpadear la consola ocasionalmente
-                if (Math.random() > 0.9) {
+                if (Math.random() > 0.8) {
                     consoleElement.style.opacity = 0.3;
                     setTimeout(() => {
                         consoleElement.style.opacity = 1;
                     }, 100);
                 }
             }, 300);
+            
+            // Crear ventanas adicionales aleatoriamente
+            setInterval(() => {
+                if (Math.random() > 0.7 && hackWindows.length < 10) {
+                    createHackWindow();
+                }
+            }, 2000);
         }
         
-        // Generar código aleatorio
+        // Generar código aleatorio más complejo
         function generateRandomCode() {
-            const codeParts = [
-                "0x7F", "0xFF", "0x3A", "0xBC", "0xDE", "0xAD", "0xBE", "0xEF",
-                "NULL", "VOID", "stack", "heap", "buffer", "overflow", "kernel", "root",
-                "sudo", "exec", "fork", "thread", "mutex", "semaphore", "pipe", "socket",
-                "crypto", "hash", "encrypt", "decrypt", "key", "certificate", "token", "auth",
-                "query", "inject", "schema", "database", "table", "column", "row", "index",
-                "compile", "parse", "lex", "tokenize", "optimize", "execute", "runtime", "memory",
-                "garbage", "collect", "reference", "pointer", "address", "register", "cache", "pipeline"
+            const protocols = ['HTTP/2', 'HTTPS/1.1', 'TCP/IP', 'UDP', 'FTP', 'SSH', 'SSL', 'TLS'];
+            const commands = [
+                'sudo rm -rf /system/ego',
+                'chmod 777 /consciousness',
+                'grep -r "limiting_belief" /mind/',
+                'ssh neuroadmin@collective-consciousness',
+                'wget http://universal-wisdom/truth.tar.gz',
+                'tar -xzf reality_matrix.tar.gz',
+                'make clean all',
+                './configure --enable-enlightenment',
+                'kill -9 ego_process',
+                'dd if=/dev/zero of=/proc/doubt bs=1M count=1024',
+                'iptables -A INPUT -p fear -j DROP',
+                'crontab -e @reboot /usr/bin/awaken',
+                'git clone https://github.com/universal-source/truth.git',
+                'docker run -d --name higher_self enlightenment:latest',
+                'kubectl apply -f manifestos/spiritual-awakening.yaml',
+                'ansible-playbook -i hosts cosmic-realization.yml'
             ];
             
-            let code = "";
-            const length = Math.floor(Math.random() * 5) + 3;
+            const responses = [
+                'OK',
+                'ERROR: Ego defense mechanism activated',
+                'PERMISSION DENIED',
+                'ACCESS GRANTED',
+                'WARNING: Cognitive dissonance detected',
+                'SUCCESS: Firewall bypassed',
+                'FAIL: Attachment too strong',
+                'COMPLETE: Illusion dismantled',
+                'PENDING: Awakening in progress',
+                'CONFIRMED: Connection to source established'
+            ];
             
-            for (let i = 0; i < length; i++) {
-                if (i > 0) code += "::";
-                code += codeParts[Math.floor(Math.random() * codeParts.length)];
-            }
-            
-            return code;
+            return `${protocols[Math.floor(Math.random() * protocols.length)]} :: ${commands[Math.floor(Math.random() * commands.length)]} >> ${responses[Math.floor(Math.random() * responses.length)]}`;
         }
+        
+        // Hacer ventanas arrastrables
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && activeWindow) {
+                activeWindow.style.left = (e.clientX - dragOffsetX) + 'px';
+                activeWindow.style.top = (e.clientY - dragOffsetY) + 'px';
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            activeWindow = null;
+        });
         
         // Iniciar cuando la página cargue
         window.onload = startHackSimulation;
@@ -488,3 +862,7 @@
     </script>
 </body>
 </html>
+
+
+
+
